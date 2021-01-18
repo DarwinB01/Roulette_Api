@@ -1,6 +1,7 @@
 package com.roulette.api.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,10 +19,10 @@ public class OutputDTO {
 	private int statusCode;
 	private String outputMessage;
 	private Long winnerNumber;
-	private List<BetDTO> betsConnected;
+	private HashMap<Long, BetDTO> betsConnected;
 	private List<WinnerDTO> winners;
 	public OutputDTO() {
-		betsConnected = new ArrayList<>();
+		betsConnected = new HashMap<>();
 		winners = new ArrayList<>();
 	}
 	public int getStatusCode() {
@@ -38,10 +39,10 @@ public class OutputDTO {
 	public void setOutputMessage(String outputMessage) {
 		this.outputMessage = outputMessage;
 	}
-	public void setBetsConnected(List<BetDTO> betsConnected) {
+	public void setBetsConnected(HashMap<Long, BetDTO> betsConnected) {
 		this.betsConnected = betsConnected;
 	}
-	public List<BetDTO> getBetsConnected() {
+	public HashMap<Long, BetDTO> getBetsConnected() {
 		
 		return betsConnected;
 	}

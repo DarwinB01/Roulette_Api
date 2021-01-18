@@ -13,7 +13,7 @@ public class Bet {
 	@Indexed
 	private Long idBet;
 	private Long money;
-	private Long idUser;
+	private String idUser;
 	private String color;
 	private Long number;
 	public Long getIdBet() {
@@ -30,11 +30,11 @@ public class Bet {
 	public void setMoney(Long money) {
 		this.money = money;
 	}
-	public Long getIdUser() {
+	public String getIdUser() {
 		
 		return idUser;
 	}
-	public void setIdUser(Long idUser) {
+	public void setIdUser(String idUser) {
 		this.idUser = idUser;
 	}
 	public String getColor() {
@@ -50,5 +50,5 @@ public class Bet {
 	}
 	public void setNumber(Long number) {
 		this.number = number;
-	}
+	}	
 }

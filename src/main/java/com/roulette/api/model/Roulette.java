@@ -1,10 +1,13 @@
 package com.roulette.api.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+
+import com.roulette.api.dto.BetDTO;
 
 /**
  * Model for roulette class 
@@ -17,13 +20,13 @@ import org.springframework.data.redis.core.RedisHash;
 public class Roulette {	
 	@Id
 	private Long idRoulette;
-	private List<Bet> betList;
+	private HashMap<Integer, Bet> betList;
 	private String status;	
 	public Roulette(String status) {
 		this.status = status;
 	}
 	public Roulette() {
-		betList = new ArrayList<>();
+		betList = new HashMap<>();
 	}
 	public Long getIdRoulette() {
 		
@@ -32,11 +35,11 @@ public class Roulette {
 	public void setIdRoulette(Long idRoulette) {		
 		this.idRoulette = idRoulette;
 	}
-	public List<Bet> getBetList() {
+	public HashMap<Integer, Bet> getBetList() {
 		
 		return betList;
 	}
-	public void setBetList(List<Bet> betList) {
+	public void setBetList(HashMap<Integer, Bet> betList) {
 		this.betList = betList;
 	}
 	public String getStatus() {
@@ -47,6 +50,7 @@ public class Roulette {
 		this.status = status;
 	}
 	public void addBetToList(Bet bet) {
-		betList.add(bet);	
+		int key = betList.size();
+		betList.put(key, bet);
 	}
 }

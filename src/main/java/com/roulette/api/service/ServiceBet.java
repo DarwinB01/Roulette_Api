@@ -1,7 +1,10 @@
 package com.roulette.api.service;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
-
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,10 +37,12 @@ public class ServiceBet {
 	public OutputDTO placeBet(BetDTO betDTO) {
 		OutputDTO output = new OutputDTO();
 		String rouletteStatus = findRouletteStatus(betDTO.getIdRoulette());
+		Optional<Roulette> roulette = repositoryMain.findById(betDTO.getIdRoulette()); 
 		betDTO.setIdUser(servletRequest.getHeader("idUser"));
+		boolean userBets = findUserBets(roulette, betDTO.getIdUser());
 		if (rouletteStatus.equals(Constants.OPEN)){
 			boolean isValidBet = isValidBet(betDTO);
-			if(isValidBet) {
+			if(isValidBet && userBets) {
 				output = saveBet(betDTO);
 				output.setOutputMessage(Constants.SUCCESS_OPERATION);
 				output.setStatusCode(Constants.STATUS_OK);
@@ -49,13 +54,34 @@ public class ServiceBet {
 
 		return output;
 	}
+	private boolean findUserBets(Optional<Roulette> roulette, String idUser) {
+		boolean isValid = false;
+		if(roulette.isPresent()) {
+			if(count(roulette, idUser) < 3) {
+				isValid = true;
+			}
+		}
+		return isValid;
+	}
+	private int count(Optional<Roulette> roulette, String idUser) {
+		int cant = 0;
+		Set<Integer> numers = roulette.get().getBetList().keySet();
+	    Iterator<Integer> it = numers.iterator();
+	    while (it.hasNext() && cant < 3) {
+	        Integer num = it.next(); 
+	        if(roulette.get().getBetList().get(num).getIdUser().equals(idUser)) {
+	        	cant+=1;
+	        }
+	        it.remove(); 
+	    }
+	    
+	    return cant;
+	}
 	public String findRouletteStatus(Long id) {
 		Optional<Roulette> roulette = repositoryMain.findById(id);
 		String status = Constants.CLOSED;
-		if (roulette.isPresent()) {
-			if (roulette.get().getStatus().equals(Constants.OPEN)) {
+		if (roulette.isPresent() && roulette.get().getStatus().equals(Constants.OPEN)) {		
 				status = Constants.OPEN;
-			}
 		}
 
 		return status;
